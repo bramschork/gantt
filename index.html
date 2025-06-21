@@ -31,15 +31,114 @@
             padding: 30px;
             margin-bottom: 30px;
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
         }
 
-        .header h1 {
+        .header-content h1 {
             font-size: 2.5em;
             font-weight: 700;
             background: linear-gradient(135deg, #667eea, #764ba2);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             margin-bottom: 10px;
+        }
+
+        .auth-section {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(255, 255, 255, 0.7);
+            padding: 10px 15px;
+            border-radius: 12px;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 2px solid #667eea;
+        }
+
+        .sign-in-container {
+            text-align: center;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 60px 40px;
+            margin: 100px auto;
+            max-width: 500px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .sign-in-container h2 {
+            font-size: 2em;
+            margin-bottom: 20px;
+            color: #4a5568;
+        }
+
+        .sign-in-container p {
+            color: #718096;
+            margin-bottom: 30px;
+            font-size: 1.1em;
+        }
+
+        .google-sign-in-btn {
+            background: white;
+            border: 2px solid #dadce0;
+            border-radius: 12px;
+            padding: 12px 24px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            transition: all 0.3s ease;
+            color: #3c4043;
+        }
+
+        .google-sign-in-btn:hover {
+            background: #f8f9fa;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            transform: translateY(-1px);
+        }
+
+        .google-icon {
+            width: 20px;
+            height: 20px;
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .app-content {
+            display: none;
+        }
+
+        .app-content.visible {
+            display: block;
         }
 
         .controls {
@@ -90,6 +189,12 @@
 
         button:hover {
             transform: translateY(-2px);
+        }
+
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
         }
 
         .timeline-container {
@@ -391,6 +496,52 @@
             color: #718096;
         }
 
+        .sync-status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            color: #718096;
+        }
+
+        .sync-indicator {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #48bb78;
+        }
+
+        .sync-indicator.syncing {
+            background: #ed8936;
+            animation: pulse 1s infinite;
+        }
+
+        .sync-indicator.error {
+            background: #e53e3e;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .sign-out-btn {
+            background: linear-gradient(135deg, #e53e3e, #c53030);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 14px;
+            transition: all 0.2s ease;
+        }
+
+        .sign-out-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(229, 62, 62, 0.4);
+        }
+
         @media (max-width: 768px) {
             .controls {
                 grid-template-columns: 1fr;
@@ -401,77 +552,130 @@
                 gap: 15px;
             }
             
+            .timeline-controls {
+                flex-direction: column;
+                width: 100%;
+            }
+            
+            .scroll-controls {
+                justify-content: center;
+            }
+            
             .zoom-slider {
                 width: 100%;
+            }
+
+            .header {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .auth-section {
+                width: 100%;
+                justify-content: center;
             }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="header">
-            <h1>What did you get done today?</h1>
-            <p>Track your daily progress and visualize your journey over time</p>
+        <!-- Sign In Screen -->
+        <div id="signInScreen" class="sign-in-container">
+            <h2>Welcome to Your Progress Tracker</h2>
+            <p>Sign in with Google to save your tasks and access them from anywhere.</p>
+            <button id="signInBtn" class="google-sign-in-btn">
+                <svg class="google-icon" viewBox="0 0 24 24">
+                    <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                    <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                    <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                    <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                </svg>
+                <span id="signInText">Sign in with Google</span>
+            </button>
         </div>
 
-        <div class="controls">
-            <div class="control-group">
-                <h3>Add New Task</h3>
-                <input type="text" id="newTaskName" placeholder="Task name">
-                <input type="date" id="newTaskStart">
-                <input type="date" id="newTaskEnd">
-                <button onclick="addNewTask()">Add Task</button>
-            </div>
-
-            <div class="control-group">
-                <h3>Continue Yesterday's Task</h3>
-                <select id="continueTask">
-                    <option value="">Select a task...</option>
-                </select>
-                <button onclick="continueTask()">Continue Task</button>
-            </div>
-
-            <div class="control-group">
-                <h3>End Task Today</h3>
-                <select id="endTask">
-                    <option value="">Select a task...</option>
-                </select>
-                <button onclick="endTask()">End Task</button>
-            </div>
-        </div>
-
-        <div class="timeline-container">
-            <div class="timeline-header">
-                <h3>Timeline View</h3>
-                <div class="timeline-controls">
-                    <div class="scroll-controls">
-                        <button class="scroll-btn" onclick="scrollTimeline(-7)" title="Previous Week">‹‹</button>
-                        <button class="scroll-btn" onclick="scrollTimeline(-1)" title="Previous Day">‹</button>
-                        <button class="today-btn" onclick="goToToday()" title="Go to Today">Today</button>
-                        <button class="scroll-btn" onclick="scrollTimeline(1)" title="Next Day">›</button>
-                        <button class="scroll-btn" onclick="scrollTimeline(7)" title="Next Week">››</button>
+        <!-- Main App -->
+        <div id="appContent" class="app-content">
+            <div class="header">
+                <div class="header-content">
+                    <h1>What did you get done today?</h1>
+                    <p>Track your daily progress and visualize your journey over time</p>
+                </div>
+                <div class="auth-section">
+                    <div class="sync-status">
+                        <div class="sync-indicator" id="syncIndicator"></div>
+                        <span id="syncText">Synced</span>
                     </div>
-                    <div style="display: flex; align-items: center; gap: 15px;">
-                        <span>Zoom:</span>
-                        <input type="range" class="zoom-slider" id="zoomSlider" min="1" max="5" value="3" step="1">
-                        <span id="zoomLabel">2 Weeks</span>
+                    <div class="user-info" id="userInfo" style="display: none;">
+                        <img id="userAvatar" class="user-avatar" src="" alt="User Avatar">
+                        <div>
+                            <div id="userName" style="font-weight: 600;"></div>
+                            <div style="font-size: 12px; color: #718096;" id="userEmail"></div>
+                        </div>
                     </div>
+                    <button id="signOutBtn" class="sign-out-btn" style="display: none;">Sign Out</button>
                 </div>
             </div>
 
-            <div class="gantt-chart" id="ganttChart">
-                <!-- Chart will be populated by JavaScript -->
-            </div>
-            
-            <div class="timeline-info" id="timelineInfo">
-                Viewing today
-            </div>
-        </div>
+            <div class="controls">
+                <div class="control-group">
+                    <h3>Add New Task</h3>
+                    <input type="text" id="newTaskName" placeholder="Task name">
+                    <input type="date" id="newTaskStart">
+                    <input type="date" id="newTaskEnd">
+                    <button onclick="addNewTask()">Add Task</button>
+                </div>
 
-        <div class="stats-panel">
-            <h3 style="margin-bottom: 20px;">Statistics</h3>
-            <div class="stats-grid" id="statsGrid">
-                <!-- Stats will be populated by JavaScript -->
+                <div class="control-group">
+                    <h3>Continue Yesterday's Task</h3>
+                    <select id="continueTask">
+                        <option value="">Select a task...</option>
+                    </select>
+                    <button onclick="continueTask()">Continue Task</button>
+                </div>
+
+                <div class="control-group">
+                    <h3>End Task Today</h3>
+                    <select id="endTask">
+                        <option value="">Select a task...</option>
+                    </select>
+                    <button onclick="endTask()">End Task</button>
+                </div>
+            </div>
+
+            <div class="timeline-container">
+                <div class="timeline-header">
+                    <h3>Timeline View</h3>
+                    <div class="timeline-controls">
+                        <div class="scroll-controls">
+                            <button class="scroll-btn" onclick="scrollTimeline(-7)" title="Previous Week">‹‹</button>
+                            <button class="scroll-btn" onclick="scrollTimeline(-1)" title="Previous Day">‹</button>
+                            <button class="today-btn" onclick="goToToday()" title="Go to Today">Today</button>
+                            <button class="scroll-btn" onclick="scrollTimeline(1)" title="Next Day">›</button>
+                            <button class="scroll-btn" onclick="scrollTimeline(7)" title="Next Week">››</button>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 15px;">
+                            <span>Zoom:</span>
+                            <input type="range" class="zoom-slider" id="zoomSlider" min="1" max="5" value="3" step="1">
+                            <span id="zoomLabel">2 Weeks</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="gantt-chart" id="ganttChart">
+                    <!-- Chart will be populated by JavaScript -->
+                </div>
+                
+                <div class="timeline-info" id="timelineInfo">
+                    Viewing today
+                </div>
+            </div>
+
+            <div class="stats-panel">
+                <h3 style="margin-bottom: 20px;">Statistics</h3>
+                <div class="stats-grid" id="statsGrid">
+                    <!-- Stats will be populated by JavaScript -->
+                </div>
             </div>
         </div>
     </div>
@@ -493,11 +697,47 @@
         </div>
     </div>
 
-    <script>
-        let tasks = [];
-        let currentEditingTask = null;
-        let zoomLevel = 3;
-        let timelineOffset = 0; // Days offset from today
+    <!-- Firebase SDK -->
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js';
+        import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js';
+        import { getFirestore, doc, setDoc, getDoc, onSnapshot, collection, query, where, orderBy } from 'https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js';
+
+        // Firebase configuration - REPLACE WITH YOUR CONFIG
+        const firebaseConfig = {
+        
+          apiKey: "AIzaSyBXcpU5tLSuiJD8MB12yI6EFK20Bx4NEbc",
+        
+          authDomain: "whatdidyougetdone-bf9fb.firebaseapp.com",
+        
+          projectId: "whatdidyougetdone-bf9fb",
+        
+          storageBucket: "whatdidyougetdone-bf9fb.firebasestorage.app",
+        
+          messagingSenderId: "219267541932",
+        
+          appId: "1:219267541932:web:9ebeff51461c15d2c42809",
+        
+          measurementId: "G-52FSWTRHK3"
+        
+        };
+
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        const provider = new GoogleAuthProvider();
+
+        // Global variables
+        window.auth = auth;
+        window.db = db;
+        window.currentUser = null;
+        window.tasks = [];
+        window.currentEditingTask = null;
+        window.zoomLevel = 3;
+        window.timelineOffset = 0;
+        window.unsubscribeFromTasks = null;
 
         const zoomOptions = {
             1: { days: 3, label: '3 Days' },
@@ -507,553 +747,130 @@
             5: { days: 365, label: '1 Year' }
         };
 
-        // Initialize
-        document.addEventListener('DOMContentLoaded', function() {
-            loadTasks();
-            setupEventListeners();
-            updateView();
-            setDefaultDates();
-        });
-
-        function setupEventListeners() {
-            document.getElementById('zoomSlider').addEventListener('input', function(e) {
-                zoomLevel = parseInt(e.target.value);
-                document.getElementById('zoomLabel').textContent = zoomOptions[zoomLevel].label;
-                updateView();
-            });
-        }
-
-        function setDefaultDates() {
-            const today = new Date().toISOString().split('T')[0];
-            document.getElementById('newTaskStart').value = today;
-            document.getElementById('newTaskEnd').value = today;
-        }
-
-        function loadTasks() {
-            const saved = JSON.parse(localStorage.getItem('lifeTasks') || '[]');
-            tasks = saved.map(task => ({
-                ...task,
-                startDate: new Date(task.startDate),
-                endDate: new Date(task.endDate)
-            }));
-        }
-
-        function saveTasks() {
-            const tasksToSave = tasks.map(task => ({
-                ...task,
-                startDate: task.startDate.toISOString(),
-                endDate: task.endDate.toISOString()
-            }));
-            localStorage.setItem('lifeTasks', JSON.stringify(tasksToSave));
-        }
-
-        function addNewTask() {
-            const name = document.getElementById('newTaskName').value;
-            const start = document.getElementById('newTaskStart').value;
-            const end = document.getElementById('newTaskEnd').value;
-
-            if (!name || !start || !end) {
-                alert('Please fill in all fields');
-                return;
+        // Authentication functions
+        window.signInWithGoogle = async function() {
+            try {
+                setSyncStatus('syncing', 'Signing in...');
+                const result = await signInWithPopup(auth, provider);
+                window.currentUser = result.user;
+                showApp();
+                setSyncStatus('synced', 'Synced');
+            } catch (error) {
+                console.error('Sign in error:', error);
+                setSyncStatus('error', 'Sign in failed');
+                alert('Sign in failed. Please try again.');
             }
+        };
 
-            const task = {
-                id: Date.now(),
-                name: name,
-                startDate: new Date(start),
-                endDate: new Date(end),
-                status: 'active'
-            };
-
-            tasks.push(task);
-            saveTasks();
-            updateView();
-            clearForm();
-        }
-
-        function continueTask() {
-            const taskId = document.getElementById('continueTask').value;
-            if (!taskId) return;
-
-            const task = tasks.find(t => t.id == taskId);
-            if (task) {
-                task.endDate = new Date();
-                saveTasks();
-                updateView();
+        window.signOutUser = async function() {
+            try {
+                if (window.unsubscribeFromTasks) {
+                    window.unsubscribeFromTasks();
+                    window.unsubscribeFromTasks = null;
+                }
+                await signOut(auth);
+                window.currentUser = null;
+                window.tasks = [];
+                showSignIn();
+            } catch (error) {
+                console.error('Sign out error:', error);
+                alert('Sign out failed. Please try again.');
             }
-        }
+        };
 
-        function endTask() {
-            const taskId = document.getElementById('endTask').value;
-            if (!taskId) return;
-
-            const task = tasks.find(t => t.id == taskId);
-            if (task) {
-                task.endDate = new Date();
-                task.status = 'completed';
-                saveTasks();
-                updateView();
-            }
-        }
-
-        function clearForm() {
-            document.getElementById('newTaskName').value = '';
-            setDefaultDates();
-        }
-
-        function updateView() {
-            updateGanttChart();
-            updateDropdowns();
-            updateStats();
-        }
-
-
-
-        function updateGanttChart() {
-            const chart = document.getElementById('ganttChart');
-            const today = new Date();
-            const zoomDays = zoomOptions[zoomLevel].days;
+        // Database functions
+        window.saveTasks = async function() {
+            if (!window.currentUser) return;
             
-            // Calculate date range with offset - infinite scrolling
-            const centerDate = new Date(today);
-            centerDate.setDate(centerDate.getDate() + timelineOffset);
+            try {
+                setSyncStatus('syncing', 'Saving...');
+                const userTasksRef = doc(db, 'users', window.currentUser.uid);
+                const tasksToSave = window.tasks.map(task => ({
+                    ...task,
+                    startDate: task.startDate.toISOString(),
+                    endDate: task.endDate.toISOString(),
+                    updatedAt: new Date().toISOString()
+                }));
+                
+                await setDoc(userTasksRef, { 
+                    tasks: tasksToSave,
+                    lastUpdated: new Date().toISOString()
+                }, { merge: true });
+                
+                setSyncStatus('synced', 'Synced');
+            } catch (error) {
+                console.error('Save error:', error);
+                setSyncStatus('error', 'Save failed');
+            }
+        };
+
+        window.loadTasks = async function() {
+            if (!window.currentUser) return;
             
-            const startDate = new Date(centerDate);
-            startDate.setDate(startDate.getDate() - Math.floor(zoomDays / 2));
-            const endDate = new Date(centerDate);
-            endDate.setDate(endDate.getDate() + Math.floor(zoomDays / 2));
-
-            // Adjust for odd number of days to ensure proper centering
-            if (zoomDays % 2 === 0) {
-                endDate.setDate(endDate.getDate() - 1);
-            }
-
-            // Generate date array
-            const dates = [];
-            const currentDate = new Date(startDate);
-            while (currentDate <= endDate) {
-                dates.push(new Date(currentDate));
-                currentDate.setDate(currentDate.getDate() + 1);
-            }
-
-            // Build chart HTML
-            let chartHTML = `
-                <div class="chart-header">
-                    <div class="task-column">Tasks</div>
-                    <div class="timeline-column">
-                        <div class="date-markers">
-                            ${dates.map(date => {
-                                const isToday = date.toDateString() === today.toDateString();
-                                const keyDate = isKeyDate(date, today);
-                                const isCenter = Math.abs(date - centerDate) < 24 * 60 * 60 * 1000; // Within 24 hours
-                                return `<div class="date-marker ${isToday ? 'today' : ''} ${keyDate ? 'key-date' : ''} ${isCenter && !isToday ? 'center-date' : ''}">
-                                    <div>${date.getDate()}</div>
-                                    <div>${date.toLocaleDateString('en', {month: 'short'})}</div>
-                                    ${date.getFullYear() !== today.getFullYear() ? `<div style="font-size: 10px;">${date.getFullYear()}</div>` : ''}
-                                </div>`;
-                            }).join('')}
-                        </div>
-                    </div>
-                </div>
-            `;
-
-            // Add task rows - show all tasks that intersect with the current view
-            const visibleTasks = tasks.filter(task => {
-                return task.endDate >= startDate && task.startDate <= endDate;
-            });
-
-            if (visibleTasks.length === 0) {
-                chartHTML += `
-                    <div class="chart-row">
-                        <div class="task-info">
-                            <div class="task-name" style="color: #718096; font-style: italic;">No tasks in this time period</div>
-                            <div class="task-duration">Add some tasks to get started!</div>
-                        </div>
-                        <div class="timeline-row"></div>
-                    </div>
-                `;
-            } else {
-                visibleTasks.forEach(task => {
-                    const taskStartPos = calculatePosition(task.startDate, startDate, endDate, dates.length);
-                    const taskEndPos = calculatePosition(task.endDate, startDate, endDate, dates.length);
-                    const taskWidth = Math.max(taskEndPos - taskStartPos, 20);
-                    const duration = Math.ceil((task.endDate - task.startDate) / (1000 * 60 * 60 * 24)) + 1;
-
-                    chartHTML += `
-                        <div class="chart-row">
-                            <div class="task-info">
-                                <div class="task-name">${task.name}</div>
-                                <div class="task-duration">${duration} days</div>
-                            </div>
-                            <div class="timeline-row">
-                                <div class="task-bar ${task.status}" 
-                                     style="left: ${taskStartPos}%; width: ${taskWidth}%;"
-                                     onclick="editTask(${task.id})">
-                                    ${task.name}
-                                </div>
-                            </div>
-                        </div>
-                    `;
+            try {
+                setSyncStatus('syncing', 'Loading...');
+                
+                // Set up real-time listener
+                const userTasksRef = doc(db, 'users', window.currentUser.uid);
+                window.unsubscribeFromTasks = onSnapshot(userTasksRef, (doc) => {
+                    if (doc.exists()) {
+                        const data = doc.data();
+                        if (data.tasks) {
+                            window.tasks = data.tasks.map(task => ({
+                                ...task,
+                                startDate: new Date(task.startDate),
+                                endDate: new Date(task.endDate)
+                            }));
+                            updateView();
+                        }
+                    }
+                    setSyncStatus('synced', 'Synced');
                 });
+                
+            } catch (error) {
+                console.error('Load error:', error);
+                setSyncStatus('error', 'Load failed');
             }
+        };
 
-            chart.innerHTML = chartHTML;
+        // UI functions
+        function showSignIn() {
+            document.getElementById('signInScreen').style.display = 'block';
+            document.getElementById('appContent').classList.remove('visible');
+        }
+
+        function showApp() {
+            document.getElementById('signInScreen').style.display = 'none';
+            document.getElementById('appContent').classList.add('visible');
             
-            // Update timeline info
-            updateTimelineInfo(centerDate, startDate, endDate);
-        }
-
-        function isKeyDate(date, today) {
-            const diffDays = Math.floor((date - today) / (1000 * 60 * 60 * 24));
-            return [-3, 7, 30, 365].includes(diffDays);
-        }
-
-        function calculatePosition(date, startDate, endDate, totalDays) {
-            const totalMs = endDate - startDate;
-            const dateMs = date - startDate;
-            return Math.max(0, Math.min(100, (dateMs / totalMs) * 100));
-        }
-
-        function updateDropdowns() {
-            const activeTasks = tasks.filter(t => t.status === 'active');
-            
-            // Continue task dropdown
-            const continueSelect = document.getElementById('continueTask');
-            continueSelect.innerHTML = '<option value="">Select a task...</option>';
-            activeTasks.forEach(task => {
-                continueSelect.innerHTML += `<option value="${task.id}">${task.name}</option>`;
-            });
-
-            // End task dropdown
-            const endSelect = document.getElementById('endTask');
-            endSelect.innerHTML = '<option value="">Select a task...</option>';
-            activeTasks.forEach(task => {
-                endSelect.innerHTML += `<option value="${task.id}">${task.name}</option>`;
-            });
-        }
-
-        function updateStats() {
-            const statsGrid = document.getElementById('statsGrid');
-            const totalTasks = tasks.length;
-            const activeTasks = tasks.filter(t => t.status === 'active').length;
-            const completedTasks = tasks.filter(t => t.status === 'completed').length;
-            
-            const totalDays = tasks.reduce((sum, task) => {
-                return sum + Math.ceil((task.endDate - task.startDate) / (1000 * 60 * 60 * 24)) + 1;
-            }, 0);
-
-            const avgDuration = totalTasks > 0 ? Math.round(totalDays / totalTasks) : 0;
-
-            statsGrid.innerHTML = `
-                <div class="stat-card">
-                    <div class="stat-number">${totalTasks}</div>
-                    <div class="stat-label">Total Tasks</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-number">${activeTasks}</div>
-                    <div class="stat-label">Active Tasks</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-number">${completedTasks}</div>
-                    <div class="stat-label">Completed Tasks</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-number">${avgDuration}</div>
-                    <div class="stat-label">Avg Duration (days)</div>
-                </div>
-            `;
-        }
-
-        function editTask(taskId) {
-            const task = tasks.find(t => t.id === taskId);
-            if (!task) return;
-
-            currentEditingTask = task;
-            document.getElementById('editTaskName').value = task.name;
-            document.getElementById('editTaskStart').value = task.startDate.toISOString().split('T')[0];
-            document.getElementById('editTaskEnd').value = task.endDate.toISOString().split('T')[0];
-            document.getElementById('editTaskStatus').value = task.status;
-            document.getElementById('taskModal').style.display = 'block';
-        }
-
-        function closeModal() {
-            document.getElementById('taskModal').style.display = 'none';
-            currentEditingTask = null;
-        }
-
-        function saveTaskEdit() {
-            if (!currentEditingTask) return;
-
-            currentEditingTask.name = document.getElementById('editTaskName').value;
-            currentEditingTask.startDate = new Date(document.getElementById('editTaskStart').value);
-            currentEditingTask.endDate = new Date(document.getElementById('editTaskEnd').value);
-            currentEditingTask.status = document.getElementById('editTaskStatus').value;
-
-            saveTasks();
-            updateView();
-            closeModal();
-        }
-
-        function deleteTask() {
-            if (!currentEditingTask) return;
-
-            if (confirm('Are you sure you want to delete this task?')) {
-                tasks = tasks.filter(t => t.id !== currentEditingTask.id);
-                saveTasks();
+            // Update user info
+            if (window.currentUser) {
+                document.getElementById('userInfo').style.display = 'flex';
+                document.getElementById('signOutBtn').style.display = 'block';
+                document.getElementById('userAvatar').src = window.currentUser.photoURL || '';
+                document.getElementById('userName').textContent = window.currentUser.displayName || 'User';
+                document.getElementById('userEmail').textContent = window.currentUser.email || '';
+                
+                loadTasks();
                 updateView();
-                closeModal();
+                setDefaultDates();
             }
         }
 
-        // Close modal when clicking outside
-        window.onclick = function(event) {
-            const modal = document.getElementById('taskModal');
-            if (event.target === modal) {
-                closeModal();
-            }
+        function setSyncStatus(status, text) {
+            const indicator = document.getElementById('syncIndicator');
+            const statusText = document.getElementById('syncText');
+            
+            indicator.className = `sync-indicator ${status}`;
+            statusText.textContent = text;
         }
-    </script>
 
-    <!-- Unit Tests -->
-    <script>
-        // Simple testing framework
-        let testResults = [];
-        let testsRun = 0;
-        let testsPassed = 0;
-
-        function assert(condition, message) {
-            testsRun++;
-            if (condition) {
-                testsPassed++;
-                testResults.push(`✅ PASS: ${message}`);
+        // Initialize authentication state listener
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                window.currentUser = user;
+                showApp();
             } else {
-                testResults.push(`❌ FAIL: ${message}`);
+                window.currentUser = null;
+                showSignIn();
             }
-        }
-
-        function assertEqual(actual, expected, message) {
-            assert(actual === expected, `${message} (expected: ${expected}, got: ${actual})`);
-        }
-
-        function runTests() {
-            console.log('🧪 Running Life Gantt Chart Tests...\n');
-            
-            // Clear existing data for testing
-            tasks = [];
-            
-            // Test 1: Add new task functionality
-            console.log('Test Group: Task Creation');
-            const originalTaskCount = tasks.length;
-            
-            // Simulate adding a task
-            const testTask = {
-                id: Date.now(),
-                name: 'Test Task',
-                startDate: new Date('2025-06-20'),
-                endDate: new Date('2025-06-22'),
-                status: 'active'
-            };
-            tasks.push(testTask);
-            
-            assertEqual(tasks.length, originalTaskCount + 1, 'Task should be added to tasks array');
-            assertEqual(tasks[tasks.length - 1].name, 'Test Task', 'Task name should be correct');
-            assertEqual(tasks[tasks.length - 1].status, 'active', 'New task should be active by default');
-            
-            // Test 2: Task date calculations
-            console.log('\nTest Group: Date Calculations');
-            const duration = Math.ceil((testTask.endDate - testTask.startDate) / (1000 * 60 * 60 * 24)) + 1;
-            assertEqual(duration, 3, 'Task duration should be calculated correctly (3 days)');
-            
-            // Test 3: Key date detection
-            console.log('\nTest Group: Key Date Detection');
-            const today = new Date('2025-06-20');
-            const threeDaysAgo = new Date('2025-06-17');
-            const oneWeekFuture = new Date('2025-06-27');
-            
-            assert(isKeyDate(threeDaysAgo, today), '3 days ago should be marked as key date');
-            assert(isKeyDate(oneWeekFuture, today), '1 week in future should be marked as key date');
-            assert(!isKeyDate(new Date('2025-06-21'), today), 'Tomorrow should not be marked as key date');
-            
-            // Test 4: Position calculation
-            console.log('\nTest Group: Position Calculations');
-            const startDate = new Date('2025-06-15');
-            const endDate = new Date('2025-06-25');
-            const midDate = new Date('2025-06-20');
-            
-            const position = calculatePosition(midDate, startDate, endDate, 10);
-            assert(position >= 45 && position <= 55, 'Middle date should be positioned around 50%');
-            
-            // Test 5: Task status management
-            console.log('\nTest Group: Task Status Management');
-            
-            // Test completing a task
-            testTask.status = 'completed';
-            testTask.endDate = new Date();
-            assertEqual(testTask.status, 'completed', 'Task status should update to completed');
-            
-            // Test 6: Task filtering
-            console.log('\nTest Group: Task Filtering');
-            
-            // Add another active task
-            const activeTask = {
-                id: Date.now() + 1,
-                name: 'Active Task',
-                startDate: new Date(),
-                endDate: new Date(),
-                status: 'active'
-            };
-            tasks.push(activeTask);
-            
-            const activeTasks = tasks.filter(t => t.status === 'active');
-            const completedTasks = tasks.filter(t => t.status === 'completed');
-            
-            assertEqual(activeTasks.length, 1, 'Should have 1 active task');
-            assertEqual(completedTasks.length, 1, 'Should have 1 completed task');
-            
-            // Test 7: Stats calculations
-            console.log('\nTest Group: Statistics Calculations');
-            const totalTasks = tasks.length;
-            const totalDays = tasks.reduce((sum, task) => {
-                return sum + Math.ceil((task.endDate - task.startDate) / (1000 * 60 * 60 * 24)) + 1;
-            }, 0);
-            
-            assert(totalTasks > 0, 'Should have tasks for stats calculation');
-            assert(totalDays > 0, 'Should calculate total days correctly');
-            
-            // Test 8: Zoom level functionality
-            console.log('\nTest Group: Zoom Functionality');
-            
-            for (let zoom = 1; zoom <= 5; zoom++) {
-                assert(zoomOptions[zoom] !== undefined, `Zoom level ${zoom} should be defined`);
-                assert(zoomOptions[zoom].days > 0, `Zoom level ${zoom} should have positive days`);
-                assert(zoomOptions[zoom].label !== '', `Zoom level ${zoom} should have a label`);
-            }
-            
-            // Test 9: DOM element existence
-            console.log('\nTest Group: DOM Elements');
-            
-            const requiredElements = [
-                'newTaskName', 'newTaskStart', 'newTaskEnd',
-                'continueTask', 'endTask', 'zoomSlider',
-                'ganttChart', 'statsGrid', 'taskModal'
-            ];
-            
-            requiredElements.forEach(elementId => {
-                const element = document.getElementById(elementId);
-                assert(element !== null, `Element ${elementId} should exist in DOM`);
-            });
-            
-            // Test 11: Timeline scrolling functionality
-            console.log('\nTest Group: Timeline Scrolling');
-            
-            const originalOffset = timelineOffset;
-            
-            // Test scrolling forward
-            scrollTimeline(7);
-            assertEqual(timelineOffset, originalOffset + 7, 'Should scroll forward 7 days');
-            
-            // Test scrolling backward
-            scrollTimeline(-14);
-            assertEqual(timelineOffset, originalOffset - 7, 'Should scroll backward 14 days (net -7)');
-            
-            // Test going back to today
-            goToToday();
-            assertEqual(timelineOffset, 0, 'Should reset to today (offset 0)');
-            
-            // Test that visible tasks filter works
-            const futureTask = {
-                id: Date.now() + 2,
-                name: 'Future Task',
-                startDate: new Date('2025-12-01'),
-                endDate: new Date('2025-12-05'),
-                status: 'active'
-            };
-            tasks.push(futureTask);
-            
-            // When viewing current dates, future task shouldn't be visible
-            timelineOffset = 0;
-            const currentDate = new Date();
-            const startDate = new Date(currentDate);
-            startDate.setDate(startDate.getDate() - 5);
-            const endDate = new Date(currentDate);
-            endDate.setDate(endDate.getDate() + 5);
-            
-            const visibleTasks = tasks.filter(task => {
-                return task.endDate >= startDate && task.startDate <= endDate;
-            });
-            
-            const futureTaskVisible = visibleTasks.some(t => t.id === futureTask.id);
-            assert(!futureTaskVisible, 'Future task should not be visible in current view');
-            console.log('\nTest Group: Data Persistence');
-            
-            // Simulate save/load cycle
-            const originalTasks = [...tasks];
-            const tasksToSave = tasks.map(task => ({
-                ...task,
-                startDate: task.startDate.toISOString(),
-                endDate: task.endDate.toISOString()
-            }));
-            
-            // Simulate loading
-            const loadedTasks = tasksToSave.map(task => ({
-                ...task,
-                startDate: new Date(task.startDate),
-                endDate: new Date(task.endDate)
-            }));
-            
-            assertEqual(loadedTasks.length, originalTasks.length, 'Loaded tasks should match original count');
-            assert(loadedTasks[0].startDate instanceof Date, 'Loaded start date should be Date object');
-            assert(loadedTasks[0].endDate instanceof Date, 'Loaded end date should be Date object');
-            
-            // Display test results
-            console.log('\n' + '='.repeat(50));
-            console.log('📊 TEST RESULTS');
-            console.log('='.repeat(50));
-            console.log(`Tests Run: ${testsRun}`);
-            console.log(`Tests Passed: ${testsPassed}`);
-            console.log(`Tests Failed: ${testsRun - testsPassed}`);
-            console.log(`Success Rate: ${((testsPassed / testsRun) * 100).toFixed(1)}%`);
-            console.log('\nDetailed Results:');
-            testResults.forEach(result => console.log(result));
-            
-            if (testsPassed === testsRun) {
-                console.log('\n🎉 All tests passed! The Life Gantt Chart is working correctly.');
-            } else {
-                console.log('\n⚠️ Some tests failed. Please check the implementation.');
-            }
-            
-            return testsPassed === testsRun;
-        }
-
-        // Auto-run tests when page loads
-        document.addEventListener('DOMContentLoaded', function() {
-            // Wait a bit for the main app to initialize
-            setTimeout(() => {
-                runTests();
-            }, 1000);
-        });
-
-        // Add a button to manually run tests
-        document.addEventListener('DOMContentLoaded', function() {
-            const testButton = document.createElement('button');
-            testButton.textContent = '🧪 Run Tests';
-            testButton.style.cssText = `
-                position: fixed;
-                top: 20px;
-                right: 20px;
-                z-index: 1000;
-                background: linear-gradient(135deg, #48bb78, #38a169);
-                color: white;
-                border: none;
-                padding: 10px 15px;
-                border-radius: 8px;
-                font-weight: 600;
-                cursor: pointer;
-                box-shadow: 0 4px 15px rgba(72, 187, 120, 0.3);
-            `;
-            testButton.onclick = runTests;
-            document.body.appendChild(testButton);
-        });
-    </script>
-</body>
-</html>
