@@ -145,6 +145,40 @@
         display: block;
       }
 
+      .nav-tabs {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 30px;
+        background: rgba(255, 255, 255, 0.9);
+        backdrop-filter: blur(10px);
+        border-radius: 15px;
+        padding: 10px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      }
+
+      .nav-tab {
+        padding: 10px 20px;
+        border-radius: 10px;
+        cursor: pointer;
+        background: rgba(255, 255, 255, 0.5);
+        border: none;
+        font-weight: 600;
+        transition: all 0.3s ease;
+      }
+
+      .nav-tab.active {
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        color: white;
+      }
+
+      .tab-content {
+        display: none;
+      }
+
+      .tab-content.active {
+        display: block;
+      }
+
       .controls {
         display: grid;
         grid-template-columns: 1fr 1fr 1fr;
@@ -178,6 +212,10 @@
         transition: all 0.3s ease;
       }
 
+      input[type="number"] {
+        appearance: textfield;
+      }
+
       input:focus,
       select:focus {
         outline: none;
@@ -202,6 +240,157 @@
         opacity: 0.6;
         cursor: not-allowed;
         transform: none;
+      }
+
+      .priority-input {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 10px;
+      }
+
+      .priority-slider {
+        flex: 1;
+        -webkit-appearance: none;
+        appearance: none;
+        height: 8px;
+        background: linear-gradient(90deg, #48bb78, #ecc94b, #e53e3e);
+        border-radius: 5px;
+        outline: none;
+      }
+
+      .priority-slider::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 20px;
+        height: 20px;
+        background: white;
+        border-radius: 50%;
+        cursor: pointer;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+      }
+
+      .priority-value {
+        width: 40px;
+        text-align: center;
+        font-weight: 600;
+      }
+
+      .task-list-container {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        border-radius: 20px;
+        padding: 30px;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        margin-bottom: 30px;
+      }
+
+      .task-filters {
+        display: flex;
+        gap: 15px;
+        margin-bottom: 20px;
+        flex-wrap: wrap;
+        align-items: center;
+      }
+
+      .project-filter {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+
+      .project-checkbox {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        background: rgba(255, 255, 255, 0.7);
+        padding: 5px 15px;
+        border-radius: 20px;
+        cursor: pointer;
+      }
+
+      .project-checkbox input[type="checkbox"] {
+        width: auto;
+        margin: 0;
+      }
+
+      .task-list {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+      }
+
+      .task-item {
+        background: white;
+        border-radius: 15px;
+        padding: 20px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        transition: all 0.3s ease;
+        cursor: pointer;
+      }
+
+      .task-item:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+      }
+
+      .task-info-left {
+        flex: 1;
+      }
+
+      .task-title {
+        font-weight: 600;
+        font-size: 1.1em;
+        margin-bottom: 5px;
+      }
+
+      .task-details {
+        color: #718096;
+        font-size: 0.9em;
+      }
+
+      .task-score {
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        color: white;
+        padding: 8px 16px;
+        border-radius: 20px;
+        font-weight: 600;
+        font-size: 0.9em;
+      }
+
+      .project-badge {
+        display: inline-block;
+        background: rgba(102, 126, 234, 0.2);
+        color: #667eea;
+        padding: 4px 12px;
+        border-radius: 15px;
+        font-size: 0.85em;
+        font-weight: 500;
+        margin-right: 8px;
+      }
+
+      .settings-container {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        border-radius: 20px;
+        padding: 30px;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        max-width: 600px;
+        margin: 0 auto;
+      }
+
+      .settings-group {
+        margin-bottom: 25px;
+      }
+
+      .settings-group label {
+        display: block;
+        font-weight: 600;
+        margin-bottom: 10px;
+        color: #4a5568;
       }
 
       .timeline-container {
@@ -419,6 +608,9 @@
         transition: all 0.3s ease;
         background: linear-gradient(135deg, #667eea, #764ba2);
         box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
       }
 
       .task-bar:hover {
@@ -659,100 +851,195 @@
           </div>
         </div>
 
-        <div class="controls">
-          <div class="control-group">
-            <h3>Add New Task</h3>
-            <input type="text" id="newTaskName" placeholder="Task name" />
-            <input type="date" id="newTaskStart" />
-            <input type="date" id="newTaskEnd" />
-            <button onclick="addNewTask()">Add Task</button>
-          </div>
-
-          <div class="control-group">
-            <h3>Continue Yesterday's Task</h3>
-            <select id="continueTask">
-              <option value="">Select a task...</option>
-            </select>
-            <button onclick="continueTask()">Continue Task</button>
-          </div>
-
-          <div class="control-group">
-            <h3>End Task Today</h3>
-            <select id="endTask">
-              <option value="">Select a task...</option>
-            </select>
-            <button onclick="endTask()">End Task</button>
-          </div>
+        <!-- Navigation Tabs -->
+        <div class="nav-tabs">
+          <button class="nav-tab active" onclick="switchTab('timeline')">
+            Timeline
+          </button>
+          <button class="nav-tab" onclick="switchTab('tasks')">
+            Task List
+          </button>
+          <button class="nav-tab" onclick="switchTab('settings')">
+            Settings
+          </button>
         </div>
 
-        <div class="timeline-container">
-          <div class="timeline-header">
-            <h3>Timeline View</h3>
-            <div class="timeline-controls">
-              <div class="scroll-controls">
-                <button
-                  class="scroll-btn"
-                  onclick="scrollTimeline(-7)"
-                  title="Previous Week"
-                >
-                  ‹‹
-                </button>
-                <button
-                  class="scroll-btn"
-                  onclick="scrollTimeline(-1)"
-                  title="Previous Day"
-                >
-                  ‹
-                </button>
-                <button
-                  class="today-btn"
-                  onclick="goToToday()"
-                  title="Go to Today"
-                >
-                  Today
-                </button>
-                <button
-                  class="scroll-btn"
-                  onclick="scrollTimeline(1)"
-                  title="Next Day"
-                >
-                  ›
-                </button>
-                <button
-                  class="scroll-btn"
-                  onclick="scrollTimeline(7)"
-                  title="Next Week"
-                >
-                  ››
-                </button>
-              </div>
-              <div style="display: flex; align-items: center; gap: 15px">
-                <span>Zoom:</span>
+        <!-- Timeline Tab -->
+        <div id="timelineTab" class="tab-content active">
+          <div class="controls">
+            <div class="control-group">
+              <h3>Add New Task</h3>
+              <input type="text" id="newTaskName" placeholder="Task name" />
+              <input
+                type="text"
+                id="newTaskProject"
+                placeholder="Project name"
+              />
+              <div class="priority-input">
+                <label style="width: 60px">Priority:</label>
                 <input
                   type="range"
-                  class="zoom-slider"
-                  id="zoomSlider"
+                  class="priority-slider"
+                  id="newTaskPriority"
                   min="1"
-                  max="5"
-                  value="3"
-                  step="1"
+                  max="10"
+                  value="5"
                 />
-                <span id="zoomLabel">2 Weeks</span>
+                <span class="priority-value" id="newPriorityValue">5</span>
               </div>
+              <input
+                type="number"
+                id="newTaskDuration"
+                placeholder="Duration (minutes)"
+                min="1"
+              />
+              <input type="date" id="newTaskStart" />
+              <input type="date" id="newTaskEnd" />
+              <button onclick="addNewTask()">Add Task</button>
+            </div>
+
+            <div class="control-group">
+              <h3>Continue Yesterday's Task</h3>
+              <select id="continueTask">
+                <option value="">Select a task...</option>
+              </select>
+              <button onclick="continueTask()">Continue Task</button>
+            </div>
+
+            <div class="control-group">
+              <h3>End Task Today</h3>
+              <select id="endTask">
+                <option value="">Select a task...</option>
+              </select>
+              <button onclick="endTask()">End Task</button>
             </div>
           </div>
 
-          <div class="gantt-chart" id="ganttChart">
-            <!-- Chart will be populated by JavaScript -->
+          <div class="timeline-container">
+            <div class="timeline-header">
+              <h3>Timeline View</h3>
+              <div class="timeline-controls">
+                <div class="scroll-controls">
+                  <button
+                    class="scroll-btn"
+                    onclick="scrollTimeline(-7)"
+                    title="Previous Week"
+                  >
+                    ‹‹
+                  </button>
+                  <button
+                    class="scroll-btn"
+                    onclick="scrollTimeline(-1)"
+                    title="Previous Day"
+                  >
+                    ‹
+                  </button>
+                  <button
+                    class="today-btn"
+                    onclick="goToToday()"
+                    title="Go to Today"
+                  >
+                    Today
+                  </button>
+                  <button
+                    class="scroll-btn"
+                    onclick="scrollTimeline(1)"
+                    title="Next Day"
+                  >
+                    ›
+                  </button>
+                  <button
+                    class="scroll-btn"
+                    onclick="scrollTimeline(7)"
+                    title="Next Week"
+                  >
+                    ››
+                  </button>
+                </div>
+                <div style="display: flex; align-items: center; gap: 15px">
+                  <span>Zoom:</span>
+                  <input
+                    type="range"
+                    class="zoom-slider"
+                    id="zoomSlider"
+                    min="1"
+                    max="5"
+                    value="3"
+                    step="1"
+                  />
+                  <span id="zoomLabel">2 Weeks</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="gantt-chart" id="ganttChart">
+              <!-- Chart will be populated by JavaScript -->
+            </div>
+
+            <div class="timeline-info" id="timelineInfo">Viewing today</div>
           </div>
 
-          <div class="timeline-info" id="timelineInfo">Viewing today</div>
+          <div class="stats-panel">
+            <h3 style="margin-bottom: 20px">Statistics</h3>
+            <div class="stats-grid" id="statsGrid">
+              <!-- Stats will be populated by JavaScript -->
+            </div>
+          </div>
         </div>
 
-        <div class="stats-panel">
-          <h3 style="margin-bottom: 20px">Statistics</h3>
-          <div class="stats-grid" id="statsGrid">
-            <!-- Stats will be populated by JavaScript -->
+        <!-- Task List Tab -->
+        <div id="tasksTab" class="tab-content">
+          <div class="task-list-container">
+            <h3>Prioritized Task List</h3>
+            <div class="task-filters">
+              <div>
+                <label style="font-weight: 600; margin-right: 10px"
+                  >Filter by Project:</label
+                >
+                <div class="project-filter" id="projectFilter">
+                  <!-- Project checkboxes will be populated by JavaScript -->
+                </div>
+              </div>
+            </div>
+            <div class="task-list" id="taskList">
+              <!-- Tasks will be populated by JavaScript -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Settings Tab -->
+        <div id="settingsTab" class="tab-content">
+          <div class="settings-container">
+            <h3>Default Values</h3>
+            <div class="settings-group">
+              <label for="defaultPriority">Default Priority (1-10):</label>
+              <div class="priority-input">
+                <input
+                  type="range"
+                  class="priority-slider"
+                  id="defaultPriority"
+                  min="1"
+                  max="10"
+                  value="5"
+                />
+                <span class="priority-value" id="defaultPriorityValue">5</span>
+              </div>
+            </div>
+            <div class="settings-group">
+              <label for="defaultDuration">Default Duration (minutes):</label>
+              <input
+                type="number"
+                id="defaultDuration"
+                placeholder="30"
+                min="1"
+                value="30"
+              />
+            </div>
+            <div class="settings-group">
+              <label for="defaultProject">Default Project:</label>
+              <input type="text" id="defaultProject" placeholder="General" />
+            </div>
+            <button onclick="saveSettings()">Save Settings</button>
           </div>
         </div>
       </div>
@@ -764,6 +1051,25 @@
         <span class="close" onclick="closeModal()">&times;</span>
         <h3>Edit Task</h3>
         <input type="text" id="editTaskName" placeholder="Task name" />
+        <input type="text" id="editTaskProject" placeholder="Project name" />
+        <div class="priority-input">
+          <label style="width: 60px">Priority:</label>
+          <input
+            type="range"
+            class="priority-slider"
+            id="editTaskPriority"
+            min="1"
+            max="10"
+            value="5"
+          />
+          <span class="priority-value" id="editPriorityValue">5</span>
+        </div>
+        <input
+          type="number"
+          id="editTaskDuration"
+          placeholder="Duration (minutes)"
+          min="1"
+        />
         <input type="date" id="editTaskStart" />
         <input type="date" id="editTaskEnd" />
         <select id="editTaskStatus">
@@ -799,21 +1105,14 @@
         orderBy,
       } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
 
-      // Firebase configuration - REPLACE WITH YOUR CONFIG
       const firebaseConfig = {
-        apiKey: "AIzaSyBXcpU5tLSuiJD8MB12yI6EFK20Bx4NEbc",
-
-        authDomain: "whatdidyougetdone-bf9fb.firebaseapp.com",
-
-        projectId: "whatdidyougetdone-bf9fb",
-
-        storageBucket: "whatdidyougetdone-bf9fb.firebasestorage.app",
-
-        messagingSenderId: "219267541932",
-
-        appId: "1:219267541932:web:9ebeff51461c15d2c42809",
-
-        measurementId: "G-52FSWTRHK3",
+        apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+        authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+        projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+        storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+        messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+        appId: import.meta.env.VITE_FIREBASE_APP_ID,
+        measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID,
       };
 
       // Initialize Firebase
@@ -831,6 +1130,11 @@
       window.zoomLevel = 3;
       window.timelineOffset = 0;
       window.unsubscribeFromTasks = null;
+      window.settings = {
+        defaultPriority: 5,
+        defaultDuration: 30,
+        defaultProject: "General",
+      };
 
       const zoomOptions = {
         1: { days: 3, label: "3 Days" },
@@ -889,6 +1193,7 @@
             userTasksRef,
             {
               tasks: tasksToSave,
+              settings: window.settings,
               lastUpdated: new Date().toISOString(),
             },
             { merge: true }
@@ -917,8 +1222,15 @@
                   ...task,
                   startDate: new Date(task.startDate),
                   endDate: new Date(task.endDate),
+                  priority: task.priority || window.settings.defaultPriority,
+                  duration: task.duration || window.settings.defaultDuration,
+                  project: task.project || window.settings.defaultProject,
                 }));
                 updateView();
+              }
+              if (data.settings) {
+                window.settings = data.settings;
+                loadSettings();
               }
             }
             setSyncStatus("synced", "Synced");
@@ -927,6 +1239,32 @@
           console.error("Load error:", error);
           setSyncStatus("error", "Load failed");
         }
+      };
+
+      // Task scoring algorithm
+      window.calculateTaskScore = function (task) {
+        const now = new Date();
+        const daysOpen = Math.floor(
+          (now - task.startDate) / (1000 * 60 * 60 * 24)
+        );
+
+        // Priority component (75%)
+        const priorityScore = (task.priority / 10) * 0.75;
+
+        // Days open component (12.5%)
+        const daysOpenScore = Math.min(daysOpen / 30, 1) * 0.125;
+
+        // Duration component (12.5%)
+        let durationScore = 0;
+        if (task.duration <= 10) {
+          durationScore = 0.125; // Full bonus for very short tasks
+        } else if (task.duration <= 20) {
+          durationScore = 0.0625; // Half bonus for short tasks
+        } else {
+          durationScore = 0.03125; // Small bonus for longer tasks
+        }
+
+        return priorityScore + daysOpenScore + durationScore;
       };
 
       // UI functions
@@ -963,6 +1301,7 @@
         indicator.className = `sync-indicator ${status}`;
         statusText.textContent = text;
       }
+
       // Initialize authentication state listener
       onAuthStateChanged(auth, (user) => {
         if (user) {
@@ -974,16 +1313,21 @@
         }
       });
 
-      // Set up event listeners when DOM is loaded
-      document.addEventListener("DOMContentLoaded", function () {
+      // Set up event listeners immediately (module scripts run after DOM is ready)
+      function setupEventListeners() {
         // Sign in button
         const signInBtn = document.getElementById("signInBtn");
         if (signInBtn) {
           signInBtn.addEventListener("click", async function () {
+            console.log("Sign in button clicked"); // Debug log
             const signInText = document.getElementById("signInText");
             signInText.innerHTML = '<div class="loading"></div>';
-            await window.signInWithGoogle();
-            signInText.textContent = "Sign in with Google";
+            try {
+              await window.signInWithGoogle();
+            } catch (error) {
+              console.error("Sign in error:", error);
+              signInText.textContent = "Sign in with Google";
+            }
           });
         }
 
@@ -1003,24 +1347,117 @@
             renderGanttChart();
           });
         }
-      });
 
-      // Also add these missing functions that are referenced in your HTML
+        // Priority sliders
+        const newPrioritySlider = document.getElementById("newTaskPriority");
+        if (newPrioritySlider) {
+          newPrioritySlider.addEventListener("input", function (e) {
+            document.getElementById("newPriorityValue").textContent =
+              e.target.value;
+          });
+        }
+
+        const editPrioritySlider = document.getElementById("editTaskPriority");
+        if (editPrioritySlider) {
+          editPrioritySlider.addEventListener("input", function (e) {
+            document.getElementById("editPriorityValue").textContent =
+              e.target.value;
+          });
+        }
+
+        const defaultPrioritySlider =
+          document.getElementById("defaultPriority");
+        if (defaultPrioritySlider) {
+          defaultPrioritySlider.addEventListener("input", function (e) {
+            document.getElementById("defaultPriorityValue").textContent =
+              e.target.value;
+          });
+        }
+      }
+
+      // Call setupEventListeners immediately since module scripts defer by default
+      setupEventListeners();
+
+      // Tab switching
+      window.switchTab = function (tabName) {
+        // Hide all tabs
+        document.querySelectorAll(".tab-content").forEach((tab) => {
+          tab.classList.remove("active");
+        });
+
+        // Remove active class from all nav tabs
+        document.querySelectorAll(".nav-tab").forEach((tab) => {
+          tab.classList.remove("active");
+        });
+
+        // Show selected tab
+        document.getElementById(tabName + "Tab").classList.add("active");
+
+        // Add active class to clicked nav tab
+        event.target.classList.add("active");
+
+        // Update task list if switching to tasks tab
+        if (tabName === "tasks") {
+          updateTaskList();
+        }
+      };
+
+      // Settings functions
+      window.saveSettings = function () {
+        window.settings = {
+          defaultPriority: parseInt(
+            document.getElementById("defaultPriority").value
+          ),
+          defaultDuration: parseInt(
+            document.getElementById("defaultDuration").value
+          ),
+          defaultProject:
+            document.getElementById("defaultProject").value || "General",
+        };
+
+        saveTasks(); // This will save settings too
+        alert("Settings saved successfully!");
+      };
+
+      window.loadSettings = function () {
+        document.getElementById("defaultPriority").value =
+          window.settings.defaultPriority;
+        document.getElementById("defaultPriorityValue").textContent =
+          window.settings.defaultPriority;
+        document.getElementById("defaultDuration").value =
+          window.settings.defaultDuration;
+        document.getElementById("defaultProject").value =
+          window.settings.defaultProject;
+      };
+
+      // Task management functions
       window.addNewTask = function () {
         const name = document.getElementById("newTaskName").value;
+        const project =
+          document.getElementById("newTaskProject").value ||
+          window.settings.defaultProject;
+        const priority =
+          parseInt(document.getElementById("newTaskPriority").value) ||
+          window.settings.defaultPriority;
+        const duration =
+          parseInt(document.getElementById("newTaskDuration").value) ||
+          window.settings.defaultDuration;
         const startDate = new Date(
           document.getElementById("newTaskStart").value
         );
         const endDate = new Date(document.getElementById("newTaskEnd").value);
 
         if (!name || !startDate || !endDate) {
-          alert("Please fill in all fields");
+          alert("Please fill in task name and dates");
           return;
         }
 
         const newTask = {
           id: Date.now().toString(),
           name: name,
+          project: project,
+          priority: priority,
+          duration: duration,
           startDate: startDate,
           endDate: endDate,
           status: "active",
@@ -1032,6 +1469,12 @@
 
         // Clear inputs
         document.getElementById("newTaskName").value = "";
+        document.getElementById("newTaskProject").value = "";
+        document.getElementById("newTaskPriority").value =
+          window.settings.defaultPriority;
+        document.getElementById("newPriorityValue").textContent =
+          window.settings.defaultPriority;
+        document.getElementById("newTaskDuration").value = "";
         document.getElementById("newTaskStart").value = "";
         document.getElementById("newTaskEnd").value = "";
       };
@@ -1081,6 +1524,15 @@
 
         window.currentEditingTask.name =
           document.getElementById("editTaskName").value;
+        window.currentEditingTask.project =
+          document.getElementById("editTaskProject").value ||
+          window.settings.defaultProject;
+        window.currentEditingTask.priority = parseInt(
+          document.getElementById("editTaskPriority").value
+        );
+        window.currentEditingTask.duration =
+          parseInt(document.getElementById("editTaskDuration").value) ||
+          window.settings.defaultDuration;
         window.currentEditingTask.startDate = new Date(
           document.getElementById("editTaskStart").value
         );
@@ -1112,12 +1564,19 @@
         renderGanttChart();
         updateTaskSelects();
         updateStats();
+        updateProjectFilter();
       };
 
       window.setDefaultDates = function () {
         const today = new Date().toISOString().split("T")[0];
         document.getElementById("newTaskStart").value = today;
         document.getElementById("newTaskEnd").value = today;
+
+        // Set default values
+        document.getElementById("newTaskPriority").value =
+          window.settings.defaultPriority;
+        document.getElementById("newPriorityValue").textContent =
+          window.settings.defaultPriority;
       };
 
       window.updateTaskSelects = function () {
@@ -1134,13 +1593,13 @@
             // Can continue completed tasks
             const option = document.createElement("option");
             option.value = task.id;
-            option.textContent = task.name;
+            option.textContent = `${task.name} (${task.project})`;
             continueSelect.appendChild(option);
           } else {
             // Can end active tasks
             const option = document.createElement("option");
             option.value = task.id;
-            option.textContent = task.name;
+            option.textContent = `${task.name} (${task.project})`;
             endSelect.appendChild(option);
           }
         });
@@ -1203,6 +1662,7 @@
                         <div class="task-info">
                             <div class="task-name">${task.name}</div>
                             <div class="task-duration">${task.startDate.toLocaleDateString()} - ${task.endDate.toLocaleDateString()}</div>
+                            <div class="project-badge">${task.project}</div>
                         </div>
                         <div class="timeline-row">
                             <div class="task-bar ${task.status}" 
@@ -1231,6 +1691,11 @@
         window.currentEditingTask = task;
 
         document.getElementById("editTaskName").value = task.name;
+        document.getElementById("editTaskProject").value = task.project;
+        document.getElementById("editTaskPriority").value = task.priority;
+        document.getElementById("editPriorityValue").textContent =
+          task.priority;
+        document.getElementById("editTaskDuration").value = task.duration;
         document.getElementById("editTaskStart").value = task.startDate
           .toISOString()
           .split("T")[0];
@@ -1250,6 +1715,7 @@
             .length,
           thisWeek: 0,
           thisMonth: 0,
+          totalHours: 0,
         };
 
         const now = new Date();
@@ -1267,6 +1733,7 @@
         window.tasks.forEach((task) => {
           if (task.startDate >= weekAgo) stats.thisWeek++;
           if (task.startDate >= monthAgo) stats.thisMonth++;
+          stats.totalHours += (task.duration || 0) / 60;
         });
 
         const statsGrid = document.getElementById("statsGrid");
@@ -1291,7 +1758,75 @@
                     <div class="stat-number">${stats.thisMonth}</div>
                     <div class="stat-label">Started This Month</div>
                 </div>
+                <div class="stat-card">
+                    <div class="stat-number">${stats.totalHours.toFixed(1)}</div>
+                    <div class="stat-label">Total Hours</div>
+                </div>
             `;
+      };
+
+      window.updateProjectFilter = function () {
+        const projects = [...new Set(window.tasks.map((t) => t.project))];
+        const filterDiv = document.getElementById("projectFilter");
+
+        filterDiv.innerHTML = "";
+
+        projects.forEach((project) => {
+          const label = document.createElement("label");
+          label.className = "project-checkbox";
+          label.innerHTML = `
+                    <input type="checkbox" value="${project}" checked onchange="updateTaskList()">
+                    <span>${project}</span>
+                `;
+          filterDiv.appendChild(label);
+        });
+      };
+
+      window.updateTaskList = function () {
+        const selectedProjects = Array.from(
+          document.querySelectorAll("#projectFilter input:checked")
+        ).map((input) => input.value);
+
+        const filteredTasks = window.tasks.filter(
+          (task) =>
+            task.status === "active" && selectedProjects.includes(task.project)
+        );
+
+        // Sort tasks by score
+        const sortedTasks = filteredTasks
+          .map((task) => ({
+            ...task,
+            score: calculateTaskScore(task),
+          }))
+          .sort((a, b) => b.score - a.score);
+
+        const taskListDiv = document.getElementById("taskList");
+        taskListDiv.innerHTML = "";
+
+        sortedTasks.forEach((task) => {
+          const taskDiv = document.createElement("div");
+          taskDiv.className = "task-item";
+          taskDiv.onclick = () => editTask(task.id);
+
+          taskDiv.innerHTML = `
+                    <div class="task-info-left">
+                        <div class="task-title">${task.name}</div>
+                        <div class="task-details">
+                            <span class="project-badge">${task.project}</span>
+                            Priority: ${task.priority}/10 | Duration: ${task.duration}min | 
+                            Open for: ${Math.floor((new Date() - task.startDate) / (1000 * 60 * 60 * 24))} days
+                        </div>
+                    </div>
+                    <div class="task-score">Score: ${(task.score * 100).toFixed(1)}</div>
+                `;
+
+          taskListDiv.appendChild(taskDiv);
+        });
+
+        if (sortedTasks.length === 0) {
+          taskListDiv.innerHTML =
+            '<p style="text-align: center; color: #718096;">No active tasks found for selected projects.</p>';
+        }
       };
     </script>
   </body>
