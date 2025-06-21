@@ -1,0 +1,417 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Firebase Auth Debug Test</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        max-width: 800px;
+        margin: 50px auto;
+        padding: 20px;
+        background: #f5f5f5;
+      }
+      .container {
+        background: white;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+      button {
+        background: #4285f4;
+        color: white;
+        border: none;
+        padding: 15px 30px;
+        border-radius: 8px;
+        font-size: 16px;
+        cursor: pointer;
+        margin: 10px 0;
+        display: block;
+        width: 100%;
+      }
+      button:hover {
+        background: #3367d6;
+      }
+      .console-output {
+        background: #1a1a1a;
+        color: #00ff00;
+        padding: 15px;
+        border-radius: 5px;
+        font-family: monospace;
+        font-size: 12px;
+        margin: 20px 0;
+        max-height: 300px;
+        overflow-y: auto;
+      }
+      .error {
+        color: #ff4444;
+      }
+      .success {
+        color: #44ff44;
+      }
+      .info {
+        color: #4444ff;
+      }
+      .warning {
+        color: #ffaa00;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>🔍 Firebase Auth Debug Tool</h1>
+      <p>This page will help debug your Google Sign-in issue step by step.</p>
+
+      <div id="config-status">
+        <h3>Step 1: Check Firebase Configuration</h3>
+        <div id="config-check">Checking...</div>
+      </div>
+
+      <div id="auth-test">
+        <h3>Step 2: Test Authentication</h3>
+        <button id="testSignIn">🚀 Test Google Sign-in</button>
+        <button id="testRedirect">🔄 Try Redirect Method</button>
+      </div>
+
+      <div id="user-info">
+        <h3>Step 3: User Information</h3>
+        <div id="user-display">Not signed in</div>
+        <button id="signOutBtn" style="display: none; background: #dc3545">
+          Sign Out
+        </button>
+      </div>
+
+      <div>
+        <h3>📊 Console Output:</h3>
+        <div id="console" class="console-output">
+          <div>🎯 Debug console initialized...</div>
+        </div>
+      </div>
+
+      <div>
+        <h3>📋 Checklist:</h3>
+        <ul>
+          <li id="check-config">❓ Firebase config loaded</li>
+          <li id="check-auth">❓ Firebase auth initialized</li>
+          <li id="check-provider">❓ Google provider configured</li>
+          <li id="check-domains">❓ Domain authorized in Firebase</li>
+          <li id="check-popup">❓ Popup allowed in browser</li>
+        </ul>
+      </div>
+    </div>
+
+    <script type="module">
+      // 🔧 REPLACE THESE WITH YOUR ACTUAL FIREBASE CONFIG VALUES
+      // Firebase configuration - REPLACE WITH YOUR CONFIG
+      const firebaseConfig = {
+        apiKey: "AIzaSyBXcpU5tLSuiJD8MB12yI6EFK20Bx4NEbc",
+
+        authDomain: "whatdidyougetdone-bf9fb.firebaseapp.com",
+
+        projectId: "whatdidyougetdone-bf9fb",
+
+        storageBucket: "whatdidyougetdone-bf9fb.firebasestorage.app",
+
+        messagingSenderId: "219267541932",
+
+        appId: "1:219267541932:web:9ebeff51461c15d2c42809",
+
+        measurementId: "G-52FSWTRHK3",
+      };
+
+      // Debug logging function
+      function log(message, type = "info") {
+        const console = document.getElementById("console");
+        const time = new Date().toLocaleTimeString();
+        const div = document.createElement("div");
+        div.className = type;
+        div.textContent = `[${time}] ${message}`;
+        console.appendChild(div);
+        console.scrollTop = console.scrollHeight;
+
+        // Also log to browser console
+        if (type === "error") {
+          console.error(message);
+        } else if (type === "warning") {
+          console.warn(message);
+        } else {
+          console.log(message);
+        }
+      }
+
+      function updateChecklist(item, status) {
+        const element = document.getElementById(item);
+        if (status) {
+          element.textContent = element.textContent.replace("❓", "✅");
+          element.style.color = "green";
+        } else {
+          element.textContent = element.textContent.replace("❓", "❌");
+          element.style.color = "red";
+        }
+      }
+
+      // Check Firebase configuration
+      function checkConfig() {
+        log("🔍 Checking Firebase configuration...");
+
+        const configDiv = document.getElementById("config-check");
+        let isValid = true;
+        let issues = [];
+
+        // Check for placeholder values
+        if (firebaseConfig.apiKey === "your-api-key-here") {
+          issues.push("❌ API Key is still placeholder value");
+          isValid = false;
+        } else if (firebaseConfig.apiKey.startsWith("AIzaSy")) {
+          log("✅ API Key looks valid", "success");
+        } else {
+          issues.push("⚠️ API Key format might be incorrect");
+        }
+
+        if (firebaseConfig.authDomain.includes("your-project-id")) {
+          issues.push("❌ Auth Domain is still placeholder value");
+          isValid = false;
+        } else {
+          log("✅ Auth Domain looks valid", "success");
+        }
+
+        if (firebaseConfig.projectId === "your-project-id") {
+          issues.push("❌ Project ID is still placeholder value");
+          isValid = false;
+        } else {
+          log("✅ Project ID looks valid", "success");
+        }
+
+        updateChecklist("check-config", isValid);
+
+        if (issues.length > 0) {
+          configDiv.innerHTML = `
+                    <div style="color: red;">
+                        <strong>Configuration Issues Found:</strong><br>
+                        ${issues.join("<br>")}
+                        <br><br>
+                        <strong>To fix:</strong><br>
+                        1. Go to <a href="https://console.firebase.google.com" target="_blank">Firebase Console</a><br>
+                        2. Select your project<br>
+                        3. Go to Project Settings (gear icon)<br>
+                        4. Scroll to "Your apps" section<br>
+                        5. Copy the real firebaseConfig values<br>
+                        6. Replace the placeholder values in this HTML file
+                    </div>
+                `;
+          log("❌ Firebase config has issues", "error");
+          return false;
+        } else {
+          configDiv.innerHTML =
+            '<div style="color: green;">✅ Configuration looks good!</div>';
+          log("✅ Firebase config validated", "success");
+          return true;
+        }
+      }
+
+      // Initialize Firebase
+      async function initializeFirebase() {
+        try {
+          log("🚀 Importing Firebase modules...");
+
+          const { initializeApp } = await import(
+            "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js"
+          );
+          const {
+            getAuth,
+            GoogleAuthProvider,
+            signInWithPopup,
+            signInWithRedirect,
+            onAuthStateChanged,
+            signOut,
+          } = await import(
+            "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js"
+          );
+
+          log("✅ Firebase modules imported successfully", "success");
+
+          log("🔧 Initializing Firebase app...");
+          const app = initializeApp(firebaseConfig);
+
+          log("🔐 Initializing Firebase Auth...");
+          window.auth = getAuth(app);
+          updateChecklist("check-auth", true);
+
+          log("🔑 Setting up Google Auth Provider...");
+          window.provider = new GoogleAuthProvider();
+          updateChecklist("check-provider", true);
+
+          log("✅ Firebase initialized successfully!", "success");
+
+          // Set up auth state listener
+          onAuthStateChanged(window.auth, (user) => {
+            if (user) {
+              log(
+                `✅ User signed in: ${user.displayName} (${user.email})`,
+                "success"
+              );
+              showUserInfo(user);
+            } else {
+              log("👤 No user signed in", "info");
+              hideUserInfo();
+            }
+          });
+
+          // Set up sign out
+          document
+            .getElementById("signOutBtn")
+            .addEventListener("click", async () => {
+              try {
+                await signOut(window.auth);
+                log("✅ User signed out successfully", "success");
+              } catch (error) {
+                log(`❌ Sign out error: ${error.message}`, "error");
+              }
+            });
+
+          return { signInWithPopup, signInWithRedirect };
+        } catch (error) {
+          log(`❌ Firebase initialization error: ${error.message}`, "error");
+          updateChecklist("check-auth", false);
+          updateChecklist("check-provider", false);
+          throw error;
+        }
+      }
+
+      function showUserInfo(user) {
+        const userDisplay = document.getElementById("user-display");
+        userDisplay.innerHTML = `
+                <div style="background: #e8f5e8; padding: 15px; border-radius: 8px;">
+                    <strong>✅ Signed in successfully!</strong><br>
+                    <img src="${user.photoURL}" style="width: 40px; height: 40px; border-radius: 50%; vertical-align: middle; margin-right: 10px;">
+                    <strong>${user.displayName}</strong><br>
+                    📧 ${user.email}<br>
+                    🆔 ${user.uid}
+                </div>
+            `;
+        document.getElementById("signOutBtn").style.display = "block";
+      }
+
+      function hideUserInfo() {
+        const userDisplay = document.getElementById("user-display");
+        userDisplay.innerHTML = '<div style="color: #666;">Not signed in</div>';
+        document.getElementById("signOutBtn").style.display = "none";
+      }
+
+      // Test sign-in with popup
+      async function testSignInPopup() {
+        log("🎯 Testing Google Sign-in with popup...");
+
+        if (!window.auth || !window.provider) {
+          log("❌ Firebase not properly initialized", "error");
+          return;
+        }
+
+        try {
+          log("🔓 Opening Google sign-in popup...");
+          updateChecklist("check-popup", true);
+
+          const { signInWithPopup } = await import(
+            "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js"
+          );
+          const result = await signInWithPopup(window.auth, window.provider);
+
+          log("🎉 Sign-in successful!", "success");
+          log(`👤 Welcome ${result.user.displayName}!`, "success");
+        } catch (error) {
+          log(`❌ Sign-in failed: ${error.code} - ${error.message}`, "error");
+
+          if (error.code === "auth/popup-blocked") {
+            updateChecklist("check-popup", false);
+            log(
+              "💡 Try allowing popups for this site, or use the redirect method",
+              "warning"
+            );
+          } else if (error.code === "auth/unauthorized-domain") {
+            updateChecklist("check-domains", false);
+            log("💡 Add this domain to Firebase authorized domains", "warning");
+          }
+        }
+      }
+
+      // Test sign-in with redirect
+      async function testSignInRedirect() {
+        log("🔄 Testing Google Sign-in with redirect...");
+
+        if (!window.auth || !window.provider) {
+          log("❌ Firebase not properly initialized", "error");
+          return;
+        }
+
+        try {
+          const { signInWithRedirect } = await import(
+            "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js"
+          );
+          log("🔄 Redirecting to Google sign-in...");
+          await signInWithRedirect(window.auth, window.provider);
+        } catch (error) {
+          log(
+            `❌ Redirect sign-in failed: ${error.code} - ${error.message}`,
+            "error"
+          );
+        }
+      }
+
+      // Initialize everything when page loads
+      document.addEventListener("DOMContentLoaded", async () => {
+        log("🎬 Page loaded, starting diagnostics...");
+
+        // Step 1: Check configuration
+        const configValid = checkConfig();
+
+        if (!configValid) {
+          log(
+            "⚠️ Please fix configuration issues before proceeding",
+            "warning"
+          );
+          return;
+        }
+
+        // Step 2: Initialize Firebase
+        try {
+          await initializeFirebase();
+
+          // Step 3: Set up event listeners
+          document
+            .getElementById("testSignIn")
+            .addEventListener("click", testSignInPopup);
+          document
+            .getElementById("testRedirect")
+            .addEventListener("click", testSignInRedirect);
+
+          log("🎯 Ready to test authentication!", "success");
+
+          // Check if this domain is likely to be authorized
+          const currentDomain = window.location.hostname;
+          if (
+            currentDomain === "localhost" ||
+            currentDomain === "127.0.0.1" ||
+            currentDomain.includes("github.io")
+          ) {
+            updateChecklist("check-domains", true);
+            log(
+              `✅ Current domain (${currentDomain}) should be authorized`,
+              "success"
+            );
+          } else {
+            log(
+              `⚠️ Make sure ${currentDomain} is added to Firebase authorized domains`,
+              "warning"
+            );
+          }
+        } catch (error) {
+          log(
+            "❌ Failed to initialize Firebase. Check configuration and try again.",
+            "error"
+          );
+        }
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Basic JavaScript Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f0f8ff;
+        }
+        .test-section {
+            background: white;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 10px;
+            border-left: 5px solid #007bff;
+        }
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        #output {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+            min-height: 100px;
+            font-family: monospace;
+        }
+        .status {
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+        .pass { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .fail { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+    </style>
+</head>
+<body>
+    <h1>🔍 JavaScript Debug Test</h1>
+    <p>This will help us figure out why nothing is happening when you click the sign-in button.</p>
+
+    <div class="test-section">
+        <h3>Test 1: Basic JavaScript</h3>
+        <button onclick="test1()">Click me - Test Basic JS</button>
+        <div id="test1-result">Not tested yet</div>
+    </div>
+
+    <div class="test-section">
+        <h3>Test 2: DOM Manipulation</h3>
+        <button onclick="test2()">Test DOM Updates</button>
+        <div id="test2-result">Not tested yet</div>
+    </div>
+
+    <div class="test-section">
+        <h3>Test 3: ES6 Modules</h3>
+        <button onclick="test3()">Test Module Import</button>
+        <div id="test3-result">Not tested yet</div>
+    </div>
+
+    <div class="test-section">
+        <h3>Test 4: Network/CORS</h3>
+        <button onclick="test4()">Test Firebase CDN</button>
+        <div id="test4-result">Not tested yet</div>
+    </div>
+
+    <div class="test-section">
+        <h3>Test 5: Console Check</h3>
+        <button onclick="test5()">Send Console Messages</button>
+        <div id="test5-result">Check browser console (F12)</div>
+    </div>
+
+    <div class="test-section">
+        <h3>Output Log:</h3>
+        <div id="output">Starting tests...<br></div>
+    </div>
+
+    <!-- Basic JavaScript (should always work) -->
+    <script>
+        function log(message) {
+            const output = document.getElementById('output');
+            const time = new Date().toLocaleTimeString();
+            output.innerHTML += `[${time}] ${message}<br>`;
+            console.log(message);
+        }
+
+        function setResult(testId, message, pass) {
+            const element = document.getElementById(testId + '-result');
+            element.textContent = message;
+            element.className = 'status ' + (pass ? 'pass' : 'fail');
+        }
+
+        // Test 1: Basic JavaScript
+        function test1() {
+            try {
+                log('✅ Test 1: Basic JavaScript works!');
+                setResult('test1', '✅ PASS: Basic JavaScript is working', true);
+                
+                // Test basic DOM access
+                const button = document.querySelector('button');
+                if (button) {
+                    log('✅ DOM access works');
+                } else {
+                    log('❌ DOM access failed');
+                }
+            } catch (error) {
+                log('❌ Test 1 failed: ' + error.message);
+                setResult('test1', '❌ FAIL: ' + error.message, false);
+            }
+        }
+
+        // Test 2: DOM Manipulation
+        function test2() {
+            try {
+                const testDiv = document.createElement('div');
+                testDiv.textContent = 'Dynamic content created!';
+                testDiv.style.color = 'green';
+                
+                // Clear and add to output
+                const output = document.getElementById('output');
+                output.appendChild(testDiv);
+                
+                log('✅ Test 2: DOM manipulation works!');
+                setResult('test2', '✅ PASS: DOM manipulation working', true);
+            } catch (error) {
+                log('❌ Test 2 failed: ' + error.message);
+                setResult('test2', '❌ FAIL: ' + error.message, false);
+            }
+        }
+
+        // Test 3: ES6 Modules (this might fail)
+        function test3() {
+            log('🔄 Testing ES6 module import...');
+            
+            // Try to import a simple module
+            import('data:text/javascript,export default function() { return "Module works!"; }')
+                .then(module => {
+                    const result = module.default();
+                    log('✅ Test 3: ES6 modules work! Result: ' + result);
+                    setResult('test3', '✅ PASS: ES6 modules supported', true);
+                })
+                .catch(error => {
+                    log('❌ Test 3 failed: ' + error.message);
+                    setResult('test3', '❌ FAIL: ES6 modules not supported - ' + error.message, false);
+                });
+        }
+
+        // Test 4: Network/CORS
+        function test4() {
+            log('🔄 Testing network access to Firebase CDN...');
+            
+            fetch('https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js')
+                .then(response => {
+                    if (response.ok) {
+                        log('✅ Test 4: Firebase CDN accessible');
+                        setResult('test4', '✅ PASS: Firebase CDN reachable', true);
+                    } else {
+                        log('❌ Test 4: Firebase CDN returned ' + response.status);
+                        setResult('test4', '❌ FAIL: Firebase CDN error ' + response.status, false);
+                    }
+                })
+                .catch(error => {
+                    log('❌ Test 4 failed: ' + error.message);
+                    setResult('test4', '❌ FAIL: Network error - ' + error.message, false);
+                });
+        }
+
+        // Test 5: Console output
+        function test5() {
+            console.log('🔊 TEST: This should appear in browser console');
+            console.warn('⚠️ TEST: This is a warning message');
+            console.error('❌ TEST: This is an error message (not a real error)');
+            console.info('ℹ️ TEST: This is an info message');
+            
+            log('✅ Test 5: Console messages sent - check browser console (F12)');
+            setResult('test5', '✅ PASS: Check browser console for messages', true);
+        }
+
+        // Auto-run basic test when page loads
+        window.addEventListener('load', function() {
+            log('🎬 Page loaded successfully');
+            log('🔧 Browser: ' + navigator.userAgent);
+            log('📍 Location: ' + window.location.href);
+            log('🌐 Protocol: ' + window.location.protocol);
+            
+            // Check if we're on HTTPS (required for some features)
+            if (window.location.protocol === 'https:' || window.location.hostname === 'localhost') {
+                log('✅ Protocol OK for Firebase');
+            } else {
+                log('⚠️ HTTP detected - Firebase may require HTTPS');
+            }
+        });
+    </script>
+
+    <!-- Test ES6 modules inline -->
+    <script type="module">
+        try {
+            console.log('🔧 ES6 module script loaded');
+            
+            // Try importing something from Firebase CDN
+            import('https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js')
+                .then(module => {
+                    console.log('✅ Firebase module import successful', module);
+                    log('✅ Firebase modules can be imported');
+                })
+                .catch(error => {
+                    console.error('❌ Firebase module import failed:', error);
+                    log('❌ Firebase module import failed: ' + error.message);
+                });
+                
+        } catch (error) {
+            console.error('❌ ES6 module script error:', error);
+            log('❌ ES6 module error: ' + error.message);
+        }
+    </script>
+
+    <div style="margin-top: 30px; padding: 20px; background: #fff3cd; border-radius: 10px;">
+        <h3>📋 Instructions:</h3>
+        <ol>
+            <li><strong>Open Browser Console:</strong> Press F12 → Console tab</li>
+            <li><strong>Run All Tests:</strong> Click each test button above</li>
+            <li><strong>Check Results:</strong> Look for ✅ PASS or ❌ FAIL messages</li>
+            <li><strong>Report Back:</strong> Tell me which tests pass/fail</li>
+        </ol>
+        
+        <h4>🎯 What We're Testing:</h4>
+        <ul>
+            <li><strong>Test 1:</strong> Basic JavaScript execution</li>
+            <li><strong>Test 2:</strong> DOM manipulation capabilities</li>
+            <li><strong>Test 3:</strong> ES6 module support (needed for Firebase)</li>
+            <li><strong>Test 4:</strong> Network access to Firebase CDN</li>
+            <li><strong>Test 5:</strong> Console output functionality</li>
+        </ul>
+    </div>
+</body>
+</html>
